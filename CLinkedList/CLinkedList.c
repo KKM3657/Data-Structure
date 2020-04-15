@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 typedef int Data;
 
 typedef struct _node{
@@ -13,14 +12,14 @@ typedef struct _CList{
     Node * tail;
     Node * cur;
     Node * before;
-    int numofData;
+    int numOfData;
 }CList;
 
 void ListInit(CList *plist){
     plist->tail = NULL;
     plist->cur = NULL;
     plist->before=NULL;
-    plist->numofData =0;
+    plist->numOfData =0;
 }
 
 void ListInsertFront(CList *plist, Data data){
@@ -36,7 +35,7 @@ void ListInsertFront(CList *plist, Data data){
         newNode->next=  plist->tail->next;
         plist->tail->next =newNode;
     }
-    (plist->numofData)++;
+    (plist->numOfData)++;
 }
 
 void LInsert(CList * plist, Data data){
@@ -52,7 +51,7 @@ void LInsert(CList * plist, Data data){
         plist->tail->next = newNode;
         plist->tail= newNode;
     }
-    (plist->numofData)++;
+    (plist->numOfData)++;
 }
 
 int LFirst(CList *plist, Data *pdata){
@@ -93,10 +92,63 @@ Data LRemove(CList *plist){
     plist->cur= plist->before;
     free(rpos);
 
-    (plist->numofData)--;
+    (plist->numOfData)--;
     return rdata;
 }
 
 int LCount(CList *plist){
-    return  plist->numofData;
+    return  plist->numOfData;
+}
+
+int main(void) {
+    //원형 연결 리스트의 생성 및 초기화//
+    CList list;
+    int data, i, nodeNum;
+    ListInit(&list);
+
+    //리스트에 5개의 데이터를 저장//
+    LInsert(&list, 3);
+    LInsert(&list, 4);
+    LInsert(&list, 5);
+    ListInsertFront(&list, 2);
+    ListInsertFront(&list, 1);
+
+    //리스트에 저장된 데이터를 연속 3회 출력//
+    if (LFirst(&list, &data)) {
+        printf("%d ", data);
+
+        for (i = 0; i < LCount(&list) * 3 - 1; i++) {
+            if (LNext(&list, &data))
+                printf("%d ", data);
+        }
+    }
+    printf("\n");
+
+    //2의 배수를 찾아서 모두 삭제//
+    nodeNum = LCount(&list);
+
+    if (nodeNum != 0) {
+        LFirst(&list, &data);
+        if (data % 2 == 0) {
+            LRemove(&list);
+        }
+
+        for (i = 0; i < nodeNum - 1; i++) {
+            LNext(&list, &data);
+            if (data % 2 == 0) {
+                LRemove(&list);
+            }
+        }
+    }
+
+    // 전체 데이터 1회 출력
+    if (LFirst(&list, &data)) {
+        printf("%d ", data);
+
+        for (i = 0; i < LCount(&list) - 1; i++) {
+            if (LNext(&list, &data))
+                printf("%d ", data);
+        }
+    }
+    return 0;
 }
